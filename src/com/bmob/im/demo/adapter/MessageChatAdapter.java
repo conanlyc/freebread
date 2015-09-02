@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -46,7 +45,6 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
   * @author smile
   * @date 2014-5-28 下午5:34:07
   */
-@SuppressLint("InflateParams")
 public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 
 	//8种Item的类型
@@ -79,7 +77,6 @@ public class MessageChatAdapter extends BaseListAdapter<BmobMsg> {
 		.showImageOnFail(R.drawable.ic_launcher)
 		.resetViewBeforeLoading(true)
 		.cacheOnDisc(true)
-		.cacheInMemory(true)
 		.imageScaleType(ImageScaleType.EXACTLY)
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.considerExifParams(true)

@@ -40,7 +40,8 @@ import com.bmob.im.demo.view.HeaderLayout.onRightImageButtonClickListener;
  * @author smile
  * @date 2014-6-23 下午3:17:05
  */
-public class LocationActivity extends BaseActivity implements OnGetGeoCoderResultListener {
+public class LocationActivity extends BaseActivity implements
+		OnGetGeoCoderResultListener {
 
 	// 定位相关
 	LocationClient mLocClient;

@@ -53,7 +53,6 @@ public class MyMessageReceiver extends BroadcastReceiver {
 		// TODO Auto-generated method stub
 		String json = intent.getStringExtra("msg");
 		BmobLog.i("ÊÕµ½µÄmessage = " + json);
-		
 		userManager = BmobUserManager.getInstance(context);
 		currentUser = userManager.getCurrentUser();
 		boolean isNetConnected = CommonUtils.isNetworkAvailable(context);

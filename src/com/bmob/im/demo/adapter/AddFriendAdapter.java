@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.bean.BmobChatUser;
-import cn.bmob.im.config.BmobConfig;
+import cn.bmob.im.inteface.MsgTag;
 import cn.bmob.v3.listener.PushListener;
 
 import com.bmob.im.demo.R;
@@ -66,7 +66,7 @@ public class AddFriendAdapter extends BaseListAdapter<BmobChatUser> {
 				progress.setCanceledOnTouchOutside(false);
 				progress.show();
 				//∑¢ÀÕtag«Î«Û
-				BmobChatManager.getInstance(mContext).sendTagMessage(BmobConfig.TAG_ADD_CONTACT, contract.getObjectId(),new PushListener() {
+				BmobChatManager.getInstance(mContext).sendTagMessage(MsgTag.ADD_CONTACT, contract.getObjectId(),new PushListener() {
 					
 					@Override
 					public void onSuccess() {

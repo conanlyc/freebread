@@ -1,13 +1,13 @@
 package com.bmob.im.demo.config;
 
-/** 系统变量
+/** 系统锟斤拷锟斤拷
   * @ClassName: Config
   * @Description: TODO
   * @author smile
-  * @date 2014-6-17 上午9:40:11
+  * @date 2014-6-17 锟斤拷锟斤拷9:40:11
   */
 public class Config {
 
-	//这是Bmob的ApplicationId,用于初始化操作
+	//锟斤拷锟斤拷Bmob锟斤拷ApplicationId,锟斤拷锟节筹拷始锟斤拷锟斤拷锟斤拷
 	public static String applicationId = "0782791abfd0dc3c820f1712e032cc19";
 }

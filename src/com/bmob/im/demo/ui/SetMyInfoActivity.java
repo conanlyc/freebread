@@ -33,19 +33,17 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.bmob.im.BmobChatManager;
-import cn.bmob.im.config.BmobConfig;
 import cn.bmob.im.db.BmobDB;
+import cn.bmob.im.inteface.MsgTag;
 import cn.bmob.im.util.BmobLog;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.PushListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import com.bmob.im.demo.CustomApplcation;
 import com.bmob.im.demo.R;
-import com.bmob.im.demo.bean.Blog;
 import com.bmob.im.demo.bean.User;
 import com.bmob.im.demo.config.BmobConstants;
 import com.bmob.im.demo.util.CollectionUtils;
@@ -63,7 +61,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * @date 2014-6-10 下午2:55:19
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-@SuppressLint({ "SimpleDateFormat", "ClickableViewAccessibility", "InflateParams" })
+@SuppressLint("SimpleDateFormat")
 public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 
 	TextView tv_set_name, tv_set_nick, tv_set_gender;
@@ -153,7 +151,6 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 
 	private void initMeData() {
 		User user = userManager.getCurrentUser(User.class);
-		BmobLog.i("hight = "+user.getHight()+",sex= "+user.getSex());
 		initOtherData(user.getUsername());
 	}
 
@@ -185,12 +182,9 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 	private void updateUser(User user) {
 		// 更改
 		refreshAvatar(user.getAvatar());
-		try {
-			tv_set_name.setText(user.getUsername());
-			tv_set_nick.setText(user.getNick());
-			tv_set_gender.setText(user.getSex() == true ? "男" : "女");
-		} catch (Exception e) {
-		}
+		tv_set_name.setText(user.getUsername());
+		tv_set_nick.setText(user.getNick());
+		tv_set_gender.setText(user.getSex() == true ? "男" : "女");
 		// 检测是否为黑名单用户
 		if (from.equals("other")) {
 			if (BmobDB.create(this).isBlackUser(user.getUsername())) {
@@ -242,7 +236,6 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 			break;
 		case R.id.layout_nick:
 			startAnimActivity(UpdateInfoActivity.class);
-//			addBlog();
 			break;
 		case R.id.layout_gender:// 性别
 			showSexChooseDialog();
@@ -250,12 +243,11 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 		case R.id.btn_back:// 黑名单
 			showBlackDialog(user.getUsername());
 			break;
-		case R.id.btn_add_friend://添加好友
+		case R.id.btn_add_friend:// 添加好友
 			addFriend();
 			break;
 		}
 	}
-	
 	String[] sexs = new String[]{ "男", "女" };
 	private void showSexChooseDialog() {
 		new AlertDialog.Builder(this)
@@ -282,19 +274,22 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 	  * @throws
 	  */
 	private void updateInfo(int which) {
-		final User u = new User();
+		final User user = userManager.getCurrentUser(User.class);
+		BmobLog.i("updateInfo 性别："+user.getSex());
 		if(which==0){
-			u.setSex(true);
+			user.setSex(true);
 		}else{
-			u.setSex(false);
+			user.setSex(false);
 		}
-		updateUserData(u,new UpdateListener() {
+		user.update(this, new UpdateListener() {
 
 			@Override
 			public void onSuccess() {
 				// TODO Auto-generated method stub
 				ShowToast("修改成功");
-				tv_set_gender.setText(u.getSex() == true ? "男" : "女");
+				final User u = userManager.getCurrentUser(User.class);
+				BmobLog.i("修改成功后的sex = "+u.getSex());
+				tv_set_gender.setText(user.getSex() == true ? "男" : "女");
 			}
 
 			@Override
@@ -319,7 +314,7 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 		progress.setCanceledOnTouchOutside(false);
 		progress.show();
 		// 发送tag请求
-		BmobChatManager.getInstance(this).sendTagMessage(BmobConfig.TAG_ADD_CONTACT,
+		BmobChatManager.getInstance(this).sendTagMessage(MsgTag.ADD_CONTACT,
 				user.getObjectId(), new PushListener() {
 
 					@Override
@@ -385,7 +380,6 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 
 	public String filePath = "";
 
-	@SuppressWarnings("deprecation")
 	private void showAvatarPop() {
 		View view = LayoutInflater.from(this).inflate(R.layout.pop_showavator,
 				null);
@@ -562,7 +556,7 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 			@Override
 			public void onSuccess() {
 				// TODO Auto-generated method stub
-				String url = bmobFile.getFileUrl(SetMyInfoActivity.this);
+				String url = bmobFile.getFileUrl(mApplication);
 				// 更新BmobUser对象
 				updateUserAvatar(url);
 			}
@@ -582,9 +576,9 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 	}
 
 	private void updateUserAvatar(final String url) {
-		User  u =new User();
-		u.setAvatar(url);
-		updateUserData(u,new UpdateListener() {
+		User user = (User) userManager.getCurrentUser(User.class);
+		user.setAvatar(url);
+		user.update(this, new UpdateListener() {
 			@Override
 			public void onSuccess() {
 				// TODO Auto-generated method stub
@@ -621,7 +615,7 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 				iv_set_avator.setImageBitmap(bitmap);
 				// 保存图片
 				String filename = new SimpleDateFormat("yyMMddHHmmss")
-						.format(new Date())+".png";
+						.format(new Date());
 				path = BmobConstants.MyAvatarDir + filename;
 				PhotoUtil.saveBitmap(BmobConstants.MyAvatarDir, filename,
 						bitmap, true);
@@ -631,59 +625,6 @@ public class SetMyInfoActivity extends ActivityBase implements OnClickListener {
 				}
 			}
 		}
-	}
-	
-	/** 测试关联关系是否可用
-	  * @Title: addBlog
-	  * @Description: TODO
-	  * @param  
-	  * @return void
-	  * @throws
-	  */
-	public void addBlog(){
-		//		BmobRelation relation = new BmobRelation();
-		//		blog.setObjectId("c7a9ca9c0c");
-		//		relation.add(blog);
-		//		user.setBlogs(relation);
-		final Blog blog = new Blog();
-		blog.setBrief("你好");
-		blog.save(this, new SaveListener() {
-			
-			@Override
-			public void onSuccess() {
-				// TODO Auto-generated method stub
-				BmobLog.i("blog保存成功");
-				User  u =new User();
-				u.setBlog(blog);
-				updateUserData(u, new UpdateListener() {
-					
-					@Override
-					public void onSuccess() {
-						// TODO Auto-generated method stub
-						BmobLog.i("user更新成功");
-					}
-					
-					@Override
-					public void onFailure(int code, String msg) {
-						// TODO Auto-generated method stub
-						BmobLog.i("code = "+code+",msg = "+msg);
-					}
-				});
-				
-			}
-			
-			@Override
-			public void onFailure(int arg0, String arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-	}
-	
-	private void updateUserData(User user,UpdateListener listener){
-		User current = (User) userManager.getCurrentUser(User.class);
-		user.setObjectId(current.getObjectId());
-		user.update(this, listener);
 	}
 
 }

@@ -41,8 +41,6 @@ public class SplashActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		//可设置调试模式，当为true的时候，会在logcat的BmobChat下输出一些日志，包括推送服务是否正常运行，如果服务端返回错误，也会一并打印出来。方便开发者调试
-		BmobChat.DEBUG_MODE = true;
 		//BmobIM SDK初始化--只需要这一段代码即可完成初始化
 		//请到Bmob官网(http://www.bmob.cn/)申请ApplicationId,具体地址:http://docs.bmob.cn/android/faststart/index.html?menukey=fast_start&key=start_android
 		BmobChat.getInstance(this).init(Config.applicationId);
@@ -54,12 +52,7 @@ public class SplashActivity extends BaseActivity {
 		iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
 		mReceiver = new BaiduReceiver();
 		registerReceiver(mReceiver, iFilter);
-	}
 
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
 		if (userManager.getCurrentUser() != null) {
 			// 每次自动登陆的时候就需要更新下当前位置和好友的资料，因为好友的头像，昵称啥的是经常变动的
 			updateUserInfos();
@@ -68,6 +61,7 @@ public class SplashActivity extends BaseActivity {
 			mHandler.sendEmptyMessageDelayed(GO_LOGIN, 2000);
 		}
 	}
+
 	/**
 	 * 开启定位，更新当前用户的经纬度坐标
 	 * @Title: initLocClient

@@ -22,7 +22,6 @@ import cn.bmob.im.inteface.EventListener;
 import com.bmob.im.demo.CustomApplcation;
 import com.bmob.im.demo.MyMessageReceiver;
 import com.bmob.im.demo.R;
-import com.bmob.im.demo.bean.BmobBook;
 import com.bmob.im.demo.ui.fragment.ContactFragment;
 import com.bmob.im.demo.ui.fragment.RecentFragment;
 import com.bmob.im.demo.ui.fragment.SettingsFragment;
@@ -51,45 +50,36 @@ public class MainActivity extends ActivityBase implements EventListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		//开启定时检测服务（单位为秒）-在这里检测后台是否还有未读的消息，有的话就取出来
-		//如果你觉得检测服务比较耗流量和电量，你也可以去掉这句话-同时还有onDestory方法里面的stopPollService方法
-		BmobChat.getInstance(this).startPollService(10);
+		BmobChat.getInstance(this).startPollService(30);
 		//开启广播接收器
 		initNewMessageBroadCast();
 		initTagMessageBroadCast();
 		initView();
 		initTab();
-		testDB();
 	}
 
 	private void initView(){
-		mTabs = new Button[4];
+		mTabs = new Button[3];
 		mTabs[0] = (Button) findViewById(R.id.btn_message);
 		mTabs[1] = (Button) findViewById(R.id.btn_contract);
 		mTabs[2] = (Button) findViewById(R.id.btn_set);
-		mTabs[3] = (Button) findViewById(R.id.homepage);
-		
 		iv_recent_tips = (ImageView)findViewById(R.id.iv_recent_tips);
 		iv_contact_tips = (ImageView)findViewById(R.id.iv_contact_tips);
 		//把第一个tab设为选中状态
-		mTabs[3].setSelected(true);
+		mTabs[0].setSelected(true);
 	}
 	
 	private void initTab(){
-		homepageFragment = new HomepageFragment();
 		contactFragment = new ContactFragment();
 		recentFragment = new RecentFragment();
 		settingFragment = new SettingsFragment();
-		fragments = new Fragment[] {homepageFragment, recentFragment, contactFragment, settingFragment };
+		fragments = new Fragment[] {recentFragment, contactFragment, settingFragment };
 		// 添加显示第一个fragment
 		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, recentFragment).
 			add(R.id.fragment_container, contactFragment).hide(contactFragment).show(recentFragment).commit();
 	}
 	
-	private void testDB() {
-		BmobBook t = new BmobBook();
-		t.setBookName("HarryPotter");
-		t.save(this);
-	}
+	
 	
 	/**
 	 * button点击事件
@@ -105,9 +95,6 @@ public class MainActivity extends ActivityBase implements EventListener{
 			break;
 		case R.id.btn_set:
 			index = 2;
-			break;
-		case R.id.homepage:
-			index = 3;
 			break;
 		}
 		if (currentTabIndex != index) {

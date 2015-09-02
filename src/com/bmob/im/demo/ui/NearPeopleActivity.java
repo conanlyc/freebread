@@ -36,7 +36,7 @@ public class NearPeopleActivity extends ActivityBase implements IXListViewListen
 
 	List<User> nears = new ArrayList<User>();
 
-	private double QUERY_KILOMETERS = 10;//默认查询10公里范围内的人
+	private double QUERY_KILOMETERS = 1;//默认查询1公里范围内的人
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -77,13 +77,14 @@ public class NearPeopleActivity extends ActivityBase implements IXListViewListen
 			progress.setCanceledOnTouchOutside(true);
 			progress.show();
 		}
-		
 		if(!mApplication.getLatitude().equals("")&&!mApplication.getLongtitude().equals("")){
 			double latitude = Double.parseDouble(mApplication.getLatitude());
 			double longtitude = Double.parseDouble(mApplication.getLongtitude());
 			//封装的查询方法，当进入此页面时 isUpdate为false，当下拉刷新的时候设置为true就行。
 			//此方法默认每页查询10条数据,若想查询多于10条，可在查询之前设置BRequest.QUERY_LIMIT_COUNT，如：BRequest.QUERY_LIMIT_COUNT=20
+			
 			// 此方法是新增的查询指定10公里内的性别为女性的用户列表，默认包含好友列表
+			
 			//如果你不想查询性别为女的用户，可以将equalProperty设为null或者equalObj设为null即可
 			userManager.queryKiloMetersListByPage(isUpdate,0,"location", longtitude, latitude, true,QUERY_KILOMETERS,"sex",false,new FindListener<User>() {
 			//此方法默认查询所有带地理位置信息的且性别为女的用户列表，如果你不想包含好友列表的话，将查询条件中的isShowFriends设置为false就行
@@ -130,7 +131,6 @@ public class NearPeopleActivity extends ActivityBase implements IXListViewListen
 		}else{
 			ShowToast("暂无附近的人!");
 			progress.dismiss();
-			refreshPull();
 		}
 		
 	}

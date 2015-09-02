@@ -54,17 +54,13 @@ public class UpdateInfoActivity extends ActivityBase {
 	  */
 	private void updateInfo(String nick) {
 		final User user = userManager.getCurrentUser(User.class);
-		User u = new User();
-		u.setNick(nick);
-		u.setHight(110);
-		u.setObjectId(user.getObjectId());
-		u.update(this, new UpdateListener() {
+		user.setNick(nick);
+		user.update(this, new UpdateListener() {
 
 			@Override
 			public void onSuccess() {
 				// TODO Auto-generated method stub
-				final User c = userManager.getCurrentUser(User.class);
-				ShowToast("修改成功:"+c.getNick()+",height = "+c.getHight());
+				ShowToast("修改成功");
 				finish();
 			}
 

@@ -13,11 +13,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.util.BmobLog;
 import cn.bmob.v3.listener.SaveListener;
 
 import com.bmob.im.demo.R;
-import com.bmob.im.demo.bean.User;
 import com.bmob.im.demo.config.BmobConstants;
 import com.bmob.im.demo.util.CommonUtils;
 import com.bmob.im.demo.view.dialog.DialogTips;
@@ -33,6 +33,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	EditText et_username, et_password;
 	Button btn_login;
 	TextView btn_register;
+	BmobChatUser currentUser;
 
 	private MyBroadcastReceiver receiver = new MyBroadcastReceiver();
 
@@ -46,7 +47,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BmobConstants.ACTION_REGISTER_SUCCESS_FINISH);
 		registerReceiver(receiver, filter);
-//		showNotice();
+		
+		showNotice();
 	}
 
 	public void showNotice() {
@@ -117,10 +119,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		progress.setMessage("ÕýÔÚµÇÂ½...");
 		progress.setCanceledOnTouchOutside(false);
 		progress.show();
-		User user = new User();
-		user.setUsername(name);
-		user.setPassword(password);
-		userManager.login(user,new SaveListener() {
+		userManager.login(name, password, new SaveListener() {
 
 			@Override
 			public void onSuccess() {

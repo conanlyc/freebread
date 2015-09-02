@@ -87,7 +87,6 @@ import com.bmob.im.demo.view.xlist.XListView.IXListViewListener;
  * @author smile
  * @date 2014-6-23 下午3:28:49
  */
-@SuppressLint({ "ClickableViewAccessibility", "InflateParams" })
 public class ChatActivity extends ActivityBase implements OnClickListener,
 		IXListViewListener, EventListener {
 
@@ -98,7 +97,6 @@ public class ChatActivity extends ActivityBase implements OnClickListener,
 	EmoticonsEditText edit_user_comment;
 
 	String targetId = "";
-	
 	BmobChatUser targetUser;
 
 	private static int MsgPagerNum;
@@ -305,6 +303,7 @@ public class ChatActivity extends ActivityBase implements OnClickListener,
 
 	/**
 	 * 显示录音时间过短的Toast
+	 * 
 	 * @Title: showShortToast
 	 * @return void
 	 * @throws
@@ -736,7 +735,6 @@ public class ChatActivity extends ActivityBase implements OnClickListener,
 			}
 			// 组装BmobMessage对象
 			BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
-			message.setExtra("Bmob");
 			// 默认发送完成，将数据保存到本地消息表和最近会话表中
 			manager.sendTextMessage(targetUser, message);
 			// 刷新界面
@@ -1032,17 +1030,15 @@ public class ChatActivity extends ActivityBase implements OnClickListener,
 			String msgId = intent.getStringExtra("msgId");
 			String msgTime = intent.getStringExtra("msgTime");
 			// 收到这个广播的时候，message已经在消息表中，可直接获取
-			if(TextUtils.isEmpty(from)&&TextUtils.isEmpty(msgId)&&TextUtils.isEmpty(msgTime)){
-				BmobMsg msg = BmobChatManager.getInstance(ChatActivity.this).getMessage(msgId, msgTime);
-				if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
-					return;
-				//添加到当前页面
-				mAdapter.add(msg);
-				// 定位
-				mListView.setSelection(mAdapter.getCount() - 1);
-				//取消当前聊天对象的未读标示
-				BmobDB.create(ChatActivity.this).resetUnread(targetId);
-			}
+			BmobMsg msg = BmobChatManager.getInstance(ChatActivity.this).getMessage(msgId, msgTime);
+			if (!from.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
+				return;
+			//添加到当前页面
+			mAdapter.add(msg);
+			// 定位
+			mListView.setSelection(mAdapter.getCount() - 1);
+			//取消当前聊天对象的未读标示
+			BmobDB.create(ChatActivity.this).resetUnread(targetId);
 			// 记得把广播给终结掉
 			abortBroadcast();
 		}
@@ -1134,6 +1130,7 @@ public class ChatActivity extends ActivityBase implements OnClickListener,
 	@Override
 	public void onLoadMore() {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override

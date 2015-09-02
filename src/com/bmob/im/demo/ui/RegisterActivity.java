@@ -81,8 +81,7 @@ public class RegisterActivity extends BaseActivity {
 		final User bu = new User();
 		bu.setUsername(name);
 		bu.setPassword(password);
-		//将user和设备id进行绑定aa
-		bu.setSex(true);
+		//将user和设备id进行绑定
 		bu.setDeviceType("android");
 		bu.setInstallId(BmobInstallation.getInstallationId(this));
 		bu.signUp(RegisterActivity.this, new SaveListener() {

@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.Toast;
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.BmobUserManager;
 import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.config.BmobConfig;
+import cn.bmob.im.util.BmobLog;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -103,7 +103,7 @@ public class BaseActivity extends FragmentActivity {
 	  * @throws
 	  */
 	public void ShowLog(String msg){
-		Log.i("life",msg);
+		BmobLog.i(msg);
 	}
 	
 	/**
@@ -227,7 +227,6 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 	}
-	
 	/** 更新用户的经纬度信息
 	  * @Title: uploadLocation
 	  * @Description: TODO
@@ -244,11 +243,9 @@ public class BaseActivity extends FragmentActivity {
 //			ShowLog("saveLatitude ="+saveLatitude+",saveLongtitude = "+saveLongtitude);
 //			ShowLog("newLat ="+newLat+",newLong = "+newLong);
 			if(!saveLatitude.equals(newLat)|| !saveLongtitude.equals(newLong)){//只有位置有变化就更新当前位置，达到实时更新的目的
-				User u = (User) userManager.getCurrentUser(User.class);
-				final User user = new User();
+				final User user = (User) userManager.getCurrentUser(User.class);
 				user.setLocation(CustomApplcation.lastPoint);
-				user.setObjectId(u.getObjectId());
-				user.update(this,new UpdateListener() {
+				user.update(this, new UpdateListener() {
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
