@@ -14,8 +14,10 @@ public class Person extends BmobChatUser {
 	/*added by xz
 	 * 
 	 */
+	private String userName;
 	private ArrayList<Book> bookList;   // published booklist contain both lent and unlent
 	private ArrayList<Book> borrowedList;   // borrowed booklist
+	
 	
 	
 	public Boolean addBookList(Book item) {
@@ -83,5 +85,15 @@ public class Person extends BmobChatUser {
 	}
 	public void setSortLetters(String sortLetters) {
 		this.sortLetters = sortLetters;
+	}
+	
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserName() {
+		// TODO Auto-generated method stub
+		return userName;
 	}
 }
