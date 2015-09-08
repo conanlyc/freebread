@@ -68,7 +68,6 @@ public class HomePageFragment extends FragmentBase implements OnItemClickListene
 	private List<Book> getBookList()
 	{
 		//------------ª∫¥Ê≤È—Ø------------------------------------------------------------
-
 		BmobQuery<Book> query = new BmobQuery<Book>();		
 		query.findObjects(getActivity(),new FindListener<Book>(){
 
@@ -81,8 +80,7 @@ public class HomePageFragment extends FragmentBase implements OnItemClickListene
 			@Override
 			public void onSuccess(List<Book> arg0) {
 				// TODO Auto-generated method stub
-				list = arg0;
-				
+				list = arg0;				
 				for (Book g: list)
 				{
 					System.out.println("hello");
