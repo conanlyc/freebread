@@ -1,5 +1,6 @@
 package com.bmob.im.demo.ui.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobQuery.CachePolicy;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SQLQueryListener;
 
 import com.bmob.im.demo.R;
@@ -31,8 +33,6 @@ import com.bmob.im.demo.adapter.MessageRecentAdapter;
 import com.bmob.im.demo.bean.Book;
 import com.bmob.im.demo.ui.ChatActivity;
 import com.bmob.im.demo.ui.FragmentBase;
-import com.bmob.im.demo.view.ClearEditText;
-import com.bmob.im.demo.view.dialog.DialogTips;
 
 
 /*
@@ -40,12 +40,10 @@ import com.bmob.im.demo.view.dialog.DialogTips;
  * 
  */
 public class HomePageFragment extends FragmentBase implements OnItemClickListener,OnItemLongClickListener{
-
-	ClearEditText mClearEditText;
 	
-	ListView listview;
-	
+	ListView listview;	
 	BookListAdapter adapter;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -58,42 +56,39 @@ public class HomePageFragment extends FragmentBase implements OnItemClickListene
 	}
 	
 	private void initView(){
-		initTopBarForOnlyTitle("会话");
+		initTopBarForOnlyTitle("首页");
 		listview = (ListView)findViewById(R.id.book_list);
 		listview.setOnItemClickListener(this);
 		listview.setOnItemLongClickListener(this);
-		//adapter = new BookListAdapter(getActivity(), R.layout.item_booklist, getBookList());
+		adapter = new BookListAdapter(getActivity(), R.layout.item_booklist, getBookList());
 		listview.setAdapter(adapter);
-		
-
 	}
 	
-	private void getBookList()
+	private List<Book> list = new ArrayList<Book>();
+	private List<Book> getBookList()
 	{
 		//------------缓存查询------------------------------------------------------------
-		String sql = "select bookName from Book;";
-		BmobQuery<Book> query = new BmobQuery<Book>();
-		query.setSQL(sql);		
-		//执行SQL查询操作
-		query.doSQLQuery(getActivity(), sql, new SQLQueryListener<Book>(){
+
+		BmobQuery<Book> query = new BmobQuery<Book>();		
+		query.findObjects(getActivity(),new FindListener<Book>(){
+
 			@Override
-			public void done(BmobQueryResult<Book> result, BmobException e) {
+			public void onError(int arg0, String arg1) {
 				// TODO Auto-generated method stub
-				if(e ==null){
-					List<Book> list = (List<Book>) result.getResults();
-					if(list!=null && list.size()>0){
-						for(int i=0;i<list.size();i++){
-							Book p = list.get(i);
-							Log.i("smile", " "+p.getBookName());
-						}
-					}else{
-						Log.i("smile", "查询成功，无数据返回");
-					}
-				}else{
-					Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
-				}
+				
 			}
-		});
+
+			@Override
+			public void onSuccess(List<Book> arg0) {
+				// TODO Auto-generated method stub
+				list = arg0;
+				
+				for (Book g: list)
+				{
+					System.out.println("hello");
+				}
+			}});
+		return list;
 	}
 	
 	@Override
@@ -123,7 +118,7 @@ public class HomePageFragment extends FragmentBase implements OnItemClickListene
 		try {
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					//adapter = new BookListAdapter(, R.layout.item_booklist, getBookList());
+					adapter = new BookListAdapter(getActivity(), R.layout.item_booklist, getBookList());
 					listview.setAdapter(adapter);
 				}
 			});

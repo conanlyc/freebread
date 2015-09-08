@@ -1,8 +1,8 @@
 package com.bmob.im.demo.bean;
 
-import cn.bmob.im.bean.BmobChatUser;
+import cn.bmob.v3.BmobObject;
 
-public class Book extends BmobChatUser{
+public class Book extends BmobObject{
 	/**
 	 * 
 	 */

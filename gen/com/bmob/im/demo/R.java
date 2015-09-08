@@ -271,6 +271,7 @@ public final class R {
         public static final int btn_chat_send=0x7f0b0050;
         public static final int btn_chat_voice=0x7f0b004e;
         public static final int btn_contract=0x7f0b0014;
+        public static final int btn_homepage=0x7f0b0011;
         public static final int btn_login=0x7f0b000d;
         public static final int btn_logout=0x7f0b0046;
         public static final int btn_message=0x7f0b0012;
@@ -309,7 +310,6 @@ public final class R {
         public static final int header_layout_leftview_container=0x7f0b002c;
         public static final int header_layout_middleview_container=0x7f0b002d;
         public static final int header_layout_rightview_container=0x7f0b002f;
-        public static final int homepage=0x7f0b0011;
         public static final int img_book=0x7f0b0069;
         public static final int img_friend_avatar=0x7f0b0061;
         public static final int iv_arraw=0x7f0b001e;
