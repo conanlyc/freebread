@@ -22,7 +22,9 @@ import cn.bmob.im.inteface.EventListener;
 import com.bmob.im.demo.CustomApplcation;
 import com.bmob.im.demo.MyMessageReceiver;
 import com.bmob.im.demo.R;
+import com.bmob.im.demo.bean.Book;
 import com.bmob.im.demo.ui.fragment.ContactFragment;
+import com.bmob.im.demo.ui.fragment.HomePageFragment;
 import com.bmob.im.demo.ui.fragment.RecentFragment;
 import com.bmob.im.demo.ui.fragment.SettingsFragment;
 
@@ -39,6 +41,7 @@ public class MainActivity extends ActivityBase implements EventListener{
 	private ContactFragment contactFragment;
 	private RecentFragment recentFragment;
 	private SettingsFragment settingFragment;
+	private HomePageFragment homepageFragment;
 	private Fragment[] fragments;
 	private int index;
 	private int currentTabIndex;
@@ -56,11 +59,13 @@ public class MainActivity extends ActivityBase implements EventListener{
 		initTagMessageBroadCast();
 		initView();
 		initTab();
+		insertBook();
 	}
 
 	private void initView(){
-		mTabs = new Button[3];
-		mTabs[0] = (Button) findViewById(R.id.btn_message);
+		mTabs = new Button[4];
+		mTabs[0] = (Button) findViewById(R.id.btn_homepage);
+		//mTabs[0] = (Button) findViewById(R.id.btn_message);
 		mTabs[1] = (Button) findViewById(R.id.btn_contract);
 		mTabs[2] = (Button) findViewById(R.id.btn_set);
 		iv_recent_tips = (ImageView)findViewById(R.id.iv_recent_tips);
@@ -73,12 +78,22 @@ public class MainActivity extends ActivityBase implements EventListener{
 		contactFragment = new ContactFragment();
 		recentFragment = new RecentFragment();
 		settingFragment = new SettingsFragment();
-		fragments = new Fragment[] {recentFragment, contactFragment, settingFragment };
+		homepageFragment = new HomePageFragment();
+		fragments = new Fragment[] {homepageFragment, contactFragment, settingFragment };
 		// 添加显示第一个fragment
-		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, recentFragment).
-			add(R.id.fragment_container, contactFragment).hide(contactFragment).show(recentFragment).commit();
+		//getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, recentFragment).
+		//	add(R.id.fragment_container, contactFragment).hide(contactFragment).show(recentFragment).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homepageFragment).
+		add(R.id.fragment_container, contactFragment).hide(contactFragment).show(homepageFragment).commit();
+
 	}
 	
+	
+	private void insertBook(){
+		Book book = new Book();
+		book.setBookName("C++");
+		book.save(this);
+	}
 	
 	
 	/**
@@ -87,7 +102,8 @@ public class MainActivity extends ActivityBase implements EventListener{
 	 */
 	public void onTabSelect(View view) {
 		switch (view.getId()) {
-		case R.id.btn_message:
+		case R.id.btn_homepage:
+		//case R.id.btn_message:
 			index = 0;
 			break;
 		case R.id.btn_contract:
@@ -166,8 +182,8 @@ public class MainActivity extends ActivityBase implements EventListener{
 		}
 		if(currentTabIndex==0){
 			//当前页面如果为会话页面，刷新此页面
-			if(recentFragment != null){
-				recentFragment.refresh();
+			if(homepageFragment != null){
+				homepageFragment.refresh();
 			}
 		}
 	}
